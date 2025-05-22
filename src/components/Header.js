@@ -1,15 +1,13 @@
 import { useState } from "react";
 import { Link } from "../../node_modules/react-router-dom/dist/index";
+import { LOGO_URL } from "../utils/constants";
 const Header = () => {
   // let btnName = "Login";
   const [btnNameReact, setBtnNameReact] = useState("Login");
   return (
     <div className="header">
       <div className="logo-container">
-        <img
-          className="logo"
-          src="https://graphicsfamily.com/wp-content/uploads/edd/2021/06/Editable-Photoshop-Food-Logo-Design-by-GraphicsFamily-scaled.jpg"
-        />
+        <img className="logo" src={LOGO_URL} />
       </div>
 
       <div className="nav-items">

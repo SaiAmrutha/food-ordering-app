@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { Link } from "../../node_modules/react-router-dom/dist/index";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 // import RestaurantCard from "./RestaurantCard";
@@ -20,11 +21,11 @@ const Body = () => {
 
     console.log(json);
     setListOfRestaurants(
-      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants || []
     );
     setFilteredRestaurant(
-      json?.data?.cards[1]?.card?.card?.gridElements?.infoWithStyle
+      json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle
         ?.restaurants || []
     );
   };
@@ -75,7 +76,12 @@ const Body = () => {
       <div className="resto-container">
         {/* resto card */}
         {filteredRestaurant.map((restaurant) => (
-          <RestaurantCard key={restaurant.info.id} resData={restaurant} />
+          <Link
+            key={restaurant.info.id}
+            to={"/restaurants/" + restaurant?.info?.id}
+          >
+            <RestaurantCard resData={restaurant} />
+          </Link>
         ))}
       </div>
     </div>
