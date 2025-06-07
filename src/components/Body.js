@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "../../node_modules/react-router-dom/dist/index";
+import useOnlineStatus from "../utils/useOnlineStatus";
 import RestaurantCard from "./RestaurantCard";
 import Shimmer from "./Shimmer";
 // import RestaurantCard from "./RestaurantCard";
@@ -29,6 +30,15 @@ const Body = () => {
         ?.restaurants || []
     );
   };
+
+  const onlineStatus = useOnlineStatus();
+
+  if (onlineStatus === false)
+    return (
+      <h1>
+        Looks like you're offline, please check your internet connection.{" "}
+      </h1>
+    );
 
   return !Array.isArray(listOfRestaurants) || listOfRestaurants.length === 0 ? (
     <Shimmer />
