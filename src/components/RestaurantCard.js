@@ -9,9 +9,9 @@ const RestaurantCard = ({ resData }) => {
     cuisines,
   } = resData.info || {};
   return (
-    <div className="res-card" style={{ backgroundColor: "#f0f0f0" }}>
+    <div className="m-4 p-4 w-[250px] rounded-2xl bg-gray-200 hover:bg-blue-400">
       <img
-        className="res-logo"
+        className="rounded-2xl"
         alt="res-logo"
         src={
           cloudinaryImageId
@@ -19,7 +19,7 @@ const RestaurantCard = ({ resData }) => {
             : "https://via.placeholder.com/150"
         }
       />
-      <h3>{name}</h3>
+      <h3 className="font-bold py-2 text-2xl">{name}</h3>
       <h4>{cuisines.join(", ")}</h4>
       <h4>{avgRating} stars</h4>
       <h4>{costForTwo}</h4>

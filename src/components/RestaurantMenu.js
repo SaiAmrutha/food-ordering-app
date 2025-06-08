@@ -1,60 +1,97 @@
-import { useParams } from "../../node_modules/react-router-dom/dist/index";
-import useRestauranMenu from "../utils/useRestaurantMenu";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
 import Shimmer from "./Shimmer";
-// import swiggyMockData from "../utils/newJson.json"
 
 const RestaurantMenu = () => {
-  // const [resInfo, setResInfo] = useState(null);
   const { resId } = useParams();
-  const resInfo = useRestauranMenu(resId);
-  console.log(resId);
-
-  // useEffect(() => {
-  //   fetchMenu();
-  // }, []);
-
-  // const fetchMenu = async () => {
-  //   // const data = await fetch(MENU_API1 + restId + MENU_API2);
-  //   const data = await fetch(MENU_API1(resId));
-  //   if (!data.ok) {
-  //     const text = await data.text();
-  //     console.error("API Error:", data.status, text);
-  //     return;
-  //   }
-
-  //   const json = await data.json();
-  //   // console.log("Full response:", json);
-  //   // console.log("Cards array:", json?.data?.cards);
-  //   // console.log("Card 2:", json?.data?.cards[2]);
-  //   // console.log("Restaurant info:", json?.data?.cards[2]?.card?.card?.info);
-  //   setResInfo(json?.data);
-  // };
-
+  const resInfo = useRestaurantMenu(resId);
+  const [resMenu, setResMenu] = useState([]);
   if (resInfo === null) return <Shimmer />;
 
-  const { name, cuisines, costForTwoMessage } =
-    resInfo?.cards[2]?.card?.card?.info || {};
-
-  const { itemCards = [] } =
-    resInfo?.cards[4]?.groupedCard?.cardGroupMap?.REGULAR?.cards[1]?.card?.card
-      ?.itemCards || {};
-  console.log(itemCards);
-
+  const { name, locality, avgRating } = resInfo;
   return (
-    <div className="menu">
-      {/* <h1>{restoInfo?.cards[2]?.card?.card?.info?.name}</h1> */}
-      <h1>{name}</h1>
-      <h2>{cuisines?.join(", ")}</h2>
-      <h2>{costForTwoMessage}</h2>
-      <h2>Menu</h2>
-      <ul>
+    <div>
+      <h1>restaurant menu page {resId}</h1>
+      {/* rest menu info */}
+      <h2>{name}</h2>
+      <p>Locality : {locality}</p>
+      <p>Ratings : {avgRating}</p>
+      {/* res menu categories */}
+      {resMenu?.map((category) =>
+        category?.type === "item" ? (
+          <ItemCategory key={category?.title} data={category} />
+        ) : (
+          <NestedItemCategory key={category?.title} data={category} />
+        )
+      )}
+    </div>
+  );
+};
+
+const ItemCategory = (props) => {
+  const { title, itemCards } = props?.data;
+  return (
+    <div>
+      <h2 className="text-2xl font-bold p-5 border border-blue-800 rounded-lg">
+        {title} ({itemCards?.length})
+      </h2>
+      <ul className="px-5 py-2 list-disc space-y-10">
         {itemCards?.map((item) => (
-          <li key={item?.card?.info?.id}>
-            {item?.card?.info?.name} - {item?.card?.info?.price / 100}
-          </li>
+          <MenuItem key={item?.card?.id} menuInfo={item?.card?.info} />
         ))}
       </ul>
     </div>
+  );
+};
+
+const NestedItemCategory = (props) => {
+  const { title, categories } = props?.data;
+  return (
+    <div>
+      <h2 className="text-2xl font-bold p-5 rounded-lg">{title}</h2>
+      <div className="mx-10">
+        {categories?.map((subcategory) => (
+          <div key={subcategory?.title}>
+            <h3>
+              {subcategory?.title} ({subcategory?.itemCards?.length})
+            </h3>
+            <ul>
+              {subcategory?.itemCards?.map((item) => (
+                <MenuItem
+                  key={item?.card?.info?.id}
+                  menuInfo={item?.card?.info}
+                />
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+};
+
+const MenuItem = (props) => {
+  const { name, price, defaultPrice, description, imageId } = props?.menuInfo;
+  const RESTAURANT_MENU_IMG =
+    "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/";
+  return (
+    <li className="flex justify-between">
+      <div>
+        <h1 className="font-bold">{name}</h1>
+        {price && <span>Rs {price / 100}</span>}
+        {defaultPrice && <span>Rs {defaultPrice / 100}</span>}
+        {description && <p className="w-1/2">{description}</p>}
+      </div>
+      <div className="w-40 h-40">
+        {imageId && (
+          <img
+            className="w-full h-full object-cover rounded-2xl"
+            src={RESTAURANT_MENU_IMG + imageId}
+          />
+        )}
+      </div>
+    </li>
   );
 };
 
