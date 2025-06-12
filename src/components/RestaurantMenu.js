@@ -2,63 +2,11 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { MENU_API } from "../utils/constants";
 import Shimmer from "./Shimmer";
+import useRestaurantMenu from "../utils/useRestaurantMenu";
 
 const RestaurantMenu = () => {
   const { resId } = useParams();
-  const [resInfo, setResInfo] = useState(null);
-  const [resMenu, setResMenu] = useState([]);
-
-  useEffect(() => {
-    const fetchRestaurantMenu = async () => {
-      try {
-        // const response = await fetch(MENU_API + resId);
-        const response = await fetch(MENU_API(resId));
-        const json = await response.json();
-        console.log(json?.data?.cards);
-        const restaurantData = json?.data?.cards?.find((item) =>
-          item?.card?.card["@type"]?.includes("food.v2.Restaurant")
-        )?.card?.card?.info;
-
-        const menuData = json?.data?.cards
-          ?.find((obj) => obj?.groupedCard)
-          ?.groupedCard?.cardGroupMap?.REGULAR?.cards?.filter(
-            (obj) =>
-              obj?.card?.card["@type"]?.includes("ItemCategory") ||
-              obj?.card?.card["@type"]?.includes("NestedItemCategory")
-          );
-
-        const organizedMenuData = menuData?.map((item) => {
-          const type = item?.card?.card?.["@type"];
-          const title = item?.card?.card?.title || [];
-          const itemCards = item?.card?.card?.itemCards || [];
-          const categories = item?.card?.card?.categories || [];
-
-          if (type?.includes("NestedItemCategory")) {
-            return {
-              title,
-              type: "nested",
-              categories: categories?.map((subcategory) => {
-                return {
-                  title: subcategory?.title,
-                  itemCards: subcategory?.itemCards,
-                };
-              }),
-            };
-          } else {
-            return {
-              title,
-              type: "item",
-              itemCards,
-            };
-          }
-        });
-
-        setResInfo(restaurantData);
-        setResMenu(organizedMenuData);
-      } catch (err) {}
-    };
-    fetchRestaurantMenu();
-  }, []);
+  const { resInfo, resMenu } = useRestaurantMenu(resId);
 
   if (resInfo === null) return <Shimmer />;
 
@@ -67,17 +15,22 @@ const RestaurantMenu = () => {
     <div>
       <h1>restaurant menu page {resId}</h1>
       {/* rest menu info */}
-      <h2>{name}</h2>
-      <p>Locality : {locality}</p>
-      <p>Ratings : {avgRating}</p>
-      {/* res menu categories */}
-      {resMenu?.map((category) =>
-        category?.type === "item" ? (
-          <ItemCategory key={category?.title} data={category} />
-        ) : (
-          <NestedItemCategory key={category?.title} data={category} />
-        )
-      )}
+      <h2 className="text-center font-bold">{name}</h2>
+      <p className="text-center">Locality : {locality}</p>
+      <p className="text-center">Ratings : {avgRating}</p>
+      {/* {menuData.map((category) => (
+        <RestaurantCategories />
+      ))} */}
+      <div>
+        {/* res menu categories */}
+        {resMenu?.map((category) =>
+          category?.type === "item" ? (
+            <ItemCategory key={category?.title} data={category} />
+          ) : (
+            <NestedItemCategory key={category?.title} data={category} />
+          )
+        )}
+      </div>
     </div>
   );
 };
@@ -109,6 +62,7 @@ const NestedItemCategory = (props) => {
             <h3>
               {subcategory?.title} ({subcategory?.itemCards?.length})
             </h3>
+            <span>🔽</span>
             <ul>
               {subcategory?.itemCards?.map((item) => (
                 <MenuItem
@@ -129,7 +83,7 @@ const MenuItem = (props) => {
   const RESTAURANT_MENU_IMG =
     "https://media-assets.swiggy.com/swiggy/image/upload/fl_lossy,f_auto,q_auto,w_300,h_300,c_fit/";
   return (
-    <li className="flex justify-between">
+    <li className="flex justify-between border-blue-500 border-b-3">
       <div>
         <h1 className="font-bold">{name}</h1>
         {price && <span>Rs {price / 100}</span>}
@@ -137,6 +91,9 @@ const MenuItem = (props) => {
         {description && <p className="w-1/2">{description}</p>}
       </div>
       <div className="w-40 h-40">
+        <button className="p-2 mx-12 my-30 rounded-lg bg-black text-white shadow-lg absolute">
+          Add +
+        </button>
         {imageId && (
           <img
             className="w-full h-full object-cover rounded-2xl"
