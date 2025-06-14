@@ -14,7 +14,9 @@ const RestaurantCategories = ({ data, isExpanded, onClick }) => {
     <div className="w-6/12 mx-auto my-4 bg-amber-200 shadow-lg p-4">
       {/* header */}
       <div className="flex justify-between cursor-pointer" onClick={onClick}>
-        <span className="font-bold text-lg">{data.title}</span>
+        <span className="font-bold text-lg">
+          {data.title} ({data?.itemCards?.length})
+        </span>
         <span>{isExpanded ? "🔼" : "🔽"}</span>
       </div>
       {/* conditional rendering */}
