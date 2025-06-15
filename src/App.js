@@ -14,6 +14,7 @@
  *  - ADDRESS
  *  - CONTACT
  * */
+import { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Outlet } from "../node_modules/react-router-dom/dist/index";
@@ -23,15 +24,29 @@ import Contact from "./components/Contact";
 import Error from "./components/Error";
 import Header from "./components/Header";
 import RestaurantMenu from "./components/RestaurantMenu";
+import UserContext from "./utils/UserContext";
 
 const resList = {};
 const AppLayout = () => {
+  // authentication
+  const [userName, setUserName] = useState();
+  useEffect(() => {
+    // make an API call and send username and password
+    const data = {
+      name: "Amrutha",
+    };
+    setUserName(data.name);
+  }, []);
+
   return (
-    <div className="app">
-      {/* HEADER */}
-      <Header />
-      <Outlet />
-    </div>
+    <UserContext.Provider value={{ loggedInUser: userName, setUserName }}>
+      <div className="app">
+        {/* HEADER */}
+
+        <Header />
+        <Outlet />
+      </div>
+    </UserContext.Provider>
   );
 };
 const appRouter = createBrowserRouter([
