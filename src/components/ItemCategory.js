@@ -9,7 +9,11 @@ const ItemCategory = (props) => {
       </h2> */}
       <ul className="px-5 py-2 list-disc space-y-10">
         {itemCards?.map((item) => (
-          <MenuItem key={item?.card?.id} menuInfo={item?.card?.info} />
+          <MenuItem
+            key={item?.card?.id}
+            menuInfo={item?.card?.info}
+            items={itemCards}
+          />
         ))}
       </ul>
     </div>

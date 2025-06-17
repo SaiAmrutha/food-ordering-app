@@ -16,6 +16,7 @@ const NestedItemCategory = (props) => {
                 <MenuItem
                   key={item?.card?.info?.id}
                   menuInfo={item?.card?.info}
+                  items={itemCards}
                 />
               ))}
             </ul>

@@ -1,30 +1,17 @@
-/**
- * HEADER
- *  - LOGO
- *  - NAVBAR
- * BODY
- *  - SEARCH BAR
- *  - RESTAURANTS CONTAINER
- *      - RESTAURANT CARD
- *          - Img
- *          - Name of rest, Star Rating, Cuisine, Delivery time
- * FOOTER
- *  - COPYRIGHT
- *  - LINKS
- *  - ADDRESS
- *  - CONTACT
- * */
 import { useEffect, useState } from "react";
 import ReactDOM from "react-dom/client";
+import { Provider } from "react-redux";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { Outlet } from "../node_modules/react-router-dom/dist/index";
 import About from "./components/About";
 import Body from "./components/Body";
+import Cart from "./components/Cart";
 import Contact from "./components/Contact";
 import Error from "./components/Error";
 import Header from "./components/Header";
 import RestaurantMenu from "./components/RestaurantMenu";
 import UserContext from "./utils/UserContext";
+import appStore from "./utils/appStore";
 
 const resList = {};
 const AppLayout = () => {
@@ -39,14 +26,14 @@ const AppLayout = () => {
   }, []);
 
   return (
-    <UserContext.Provider value={{ loggedInUser: userName, setUserName }}>
-      <div className="app">
-        {/* HEADER */}
-
-        <Header />
-        <Outlet />
-      </div>
-    </UserContext.Provider>
+    <Provider store={appStore}>
+      <UserContext.Provider value={{ loggedInUser: userName, setUserName }}>
+        <div className="app">
+          <Header />
+          <Outlet />
+        </div>
+      </UserContext.Provider>
+    </Provider>
   );
 };
 const appRouter = createBrowserRouter([
@@ -69,6 +56,10 @@ const appRouter = createBrowserRouter([
       {
         path: "/restaurants/:resId",
         element: <RestaurantMenu />,
+      },
+      {
+        path: "/cart",
+        element: <Cart />,
       },
     ],
     errorElement: <Error />,
