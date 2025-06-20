@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux/";
-import { addItem } from "../utils/cartSlice";
+import { addItem } from "../../cartSlice";
 import { RESTAURANT_MENU_IMG } from "../utils/constants";
 
 const MenuItem = ({ items }) => {

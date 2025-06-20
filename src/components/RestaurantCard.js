@@ -8,6 +8,7 @@ const RestaurantCard = ({ resData }) => {
     deliveryTime,
     cuisines,
   } = resData.info || {};
+  console.log(resData);
   return (
     <div className="m-4 p-4 w-[250px] rounded-2xl bg-gray-200 hover:bg-blue-400">
       <img
@@ -20,7 +21,7 @@ const RestaurantCard = ({ resData }) => {
         }
       />
       <h3 className="font-bold py-2 text-2xl">{name}</h3>
-      <h4>{cuisines.join(", ")}</h4>
+      <h4>{cuisines?.join(", ")}</h4>
       <h4>{avgRating} stars</h4>
       <h4>{costForTwo}</h4>
       <h4>{sla?.slaString}</h4>

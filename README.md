@@ -71,3 +71,29 @@ Server Side Routing
 - unit testing
 - integration testing
 - end to end testing (e2e)
+
+# setting up testing in our app
+
+- installed react testing library
+- installed jest
+- installed babel dependencies (from jest website)
+- configure babel in babel.config.js
+- config .parcelrc file to disable babel's default transpilation to use babel.config.js file
+- jest configuration ->npx create-jest in terminal and it will create a jest.config.js file for you
+- install jsdom library
+- install @babel/preset-react to make jsx work in test cases
+- include babel preset inside babel config
+- install @testing-library/jest-dom
+
+// "@type": "type.googleapis.com/swiggy.presentation.food.v2.Restaurant",
+// "info": {
+// },
+// "analytics": {
+// "context": "seo-data-4bfecd34-47ee-48db-866d-8d8640e0c4cd"
+// },
+// "cta": {
+// "link": "https://www.swiggy.com/city/bangalore/subway-1st-block-koramangala-rest656392",
+// "text": "RESTAURANT_MENU",
+// "type": "WEBLINK"
+// },
+// "widgetId": "collectionV5RestaurantListWidget_SimRestoRelevance_food_seo"
